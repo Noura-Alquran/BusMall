@@ -29,6 +29,7 @@ div ul li {
     color: rgb(1, 26, 1);
     background-color:lightgreen;
     list-style:square;
+
 }
 div ul{
     display: inline-block;
@@ -40,6 +41,7 @@ button{
     font-size: larger;
     font-weight: bold;
     font-family: 'Merienda', cursive;
+
 }
 button:hover{
     border: solid 2px snow;

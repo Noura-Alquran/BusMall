@@ -7,6 +7,7 @@ let listResults=document.getElementById('results');
 let maximumClicks = 25;
 let arrOfObjects=[];
 let calVotes=0;
+let objectsName = [];
 
 function busMallImage ( name,source) {
 this.name =name;
@@ -14,6 +15,7 @@ this.source =source;
 this.viewsCountar=0;
 this.clickedCountar=0;
 arrOfObjects.push(this);
+objectsName.push(this.name);
 }
 
 new busMallImage('bag','img/bag.jpg');
@@ -45,17 +47,21 @@ return randomIndex;
 let leftImageIndex;
 let middleImageIndex;
 let rightImageIndex;
-
+let previousShownImg=[];
 function renderRandomImages(){
     leftImageIndex = generateRandomIndex(); 
     middleImageIndex=generateRandomIndex();
     rightImageIndex = generateRandomIndex(); 
     
-    while(leftImageIndex === middleImageIndex || middleImageIndex === rightImageIndex ||rightImageIndex ===leftImageIndex){
+    while(leftImageIndex === middleImageIndex || middleImageIndex === rightImageIndex ||rightImageIndex ===leftImageIndex||previousShownImg.includes(leftImageIndex)||previousShownImg.includes(middleImageIndex)||previousShownImg.includes(rightImageIndex)){
         leftImageIndex = generateRandomIndex(); 
+        middleImageIndex=generateRandomIndex();
         rightImageIndex =generateRandomIndex();
-    }
 
+    }
+    previousShownImg[0]=leftImageIndex;
+    previousShownImg[1]=middleImageIndex;
+    previousShownImg[2]=rightImageIndex;
     for(let x=0; x < arrOfObjects.length ;x++){
       if (arrOfObjects[leftImageIndex] ===arrOfObjects[x]){
       arrOfObjects[x].viewsCountar ++ ; }
@@ -105,9 +111,10 @@ function handleClick(event){
             li = document.createElement('li');
             listResults.appendChild(li);    
           li.textContent = `${arrOfObjects[i].name} had ${arrOfObjects[i].clickedCountar} votes , and was seen ${arrOfObjects[i].viewsCountar}  times ` }
-        
+          chartRender();
+
         leftImage.removeEventListener('click', handleClick);
-        middleImageIndex.removeEventListener('click',handleClick);
+        middleImage.removeEventListener('click',handleClick);
         rightImage.removeEventListener('click', handleClick); 
     }
     
@@ -115,4 +122,33 @@ function handleClick(event){
 }
 
 
+function chartRender(){
+let dataViews=[];
+let dataClicked=[];
+for (let n=0;n<arrOfObjects.length;n++){
+ dataViews.push(arrOfObjects[n].viewsCountar);
+ dataClicked.push(arrOfObjects[n].clickedCountar);
+}
+console.log(dataViews);
+console.log(dataClicked);
+    var context = document.getElementById('Rusults-Chart').getContext('2d');
 
+    var chart = new Chart(context, {
+        type: 'bar',
+        data: {
+            labels: objectsName,
+            datasets: [{
+                label: 'Votes per product by user ',
+                backgroundColor:'lightgreen',
+                borderColor: 'green',
+               data: dataClicked,
+            },{
+                label: 'Viewed out of 25 times',
+                backgroundColor: '#green',
+                borderColor:'lightgreen',
+              data:dataViews ,    
+            }]
+           }
+    
+    });
+}
