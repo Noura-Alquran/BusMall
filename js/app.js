@@ -98,29 +98,29 @@ function handleClick(event){
         } else if(event.target.id ==='rightImage'){
             arrOfObjects[rightImageIndex].clickedCountar++;
         }
+        saveData();
         renderRandomImages();    }
     }
 
-   let view =0; // to show the results one time .
+    let view =0; // to show the results one time .
     function result (event){
-        if (calVotes>=maximumClicks && view ===0){
+        if (calVotes>=maximumClicks && view==0){
         let li;
         view=1;
         for(let i = 0 ; i < arrOfObjects.length; i++){
 
             li = document.createElement('li');
             listResults.appendChild(li);    
-          li.textContent = `${arrOfObjects[i].name} had ${arrOfObjects[i].clickedCountar} votes , and was seen ${arrOfObjects[i].viewsCountar}  times ` }
+          li.textContent = `${arrOfObjects[i].name} had ${arrOfObjects[i].clickedCountar} votes`}
+          // and was seen ${arrOfObjects[i].viewsCountar}  times ` }
           chartRender();
 
         leftImage.removeEventListener('click', handleClick);
         middleImage.removeEventListener('click',handleClick);
         rightImage.removeEventListener('click', handleClick); 
+
     }
-    
-
 }
-
 
 function chartRender(){
 let dataViews=[];
@@ -143,8 +143,8 @@ console.log(dataClicked);
                 borderColor: 'green',
                data: dataClicked,
             },{
-                label: 'Viewed out of 25 times',
-                backgroundColor: '#green',
+                label: '#Viewed ',
+                backgroundColor: 'green',
                 borderColor:'lightgreen',
               data:dataViews ,    
             }]
@@ -152,3 +152,24 @@ console.log(dataClicked);
     
     });
 }
+
+
+function saveData (){
+    let save =JSON.stringify(arrOfObjects);
+    localStorage.setItem('All Products store', save);
+}
+
+ function getData (){
+    let gVotes=localStorage.getItem('All Products store')
+  //  console.log(JSON.parse(gVotes));
+    let gettingVotes =JSON.parse(gVotes);
+   // console.log(gettingVotes);
+    if(gettingVotes){
+       arrOfObjects = gettingVotes;
+    }
+    else{
+      gettingVotes=[];
+    }
+  renderRandomImages(); 
+}
+ getData();
